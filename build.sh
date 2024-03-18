@@ -1,21 +1,13 @@
 # Bash script to symlink all nix files in all subdirectories to /etc/nixos
 
-# Check /etc/nixos for pre-existing nix files and symlinks and remove them
-find /etc/nixos -name "*.nix" | while read file; do
-    sudo rm $file
-done
-
-# Check /etc/nixos for pre-existing flake.lock files and remove it
-if [ -f /etc/nixos/flake.lock ]; then
-    sudo rm /etc/nixos/flake.lock
-fi
+sudo rm -r /etc/nixos/*
 
 # Get the current directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Find all nix files in the current directory and all subdirectories
 echo "DIR: $DIR"
-find $DIR -name "*.nix" | while read file; do
+find $DIR -not -name "build.sh" -not -path "*/\.*" | while read file; do
     # Get the relative path of the file
     echo "FILE: $file"
     relpath=$(realpath --relative-to=$DIR $file)
@@ -30,10 +22,6 @@ find $DIR -name "*.nix" | while read file; do
     # Create the symlink
     sudo ln $file /etc/nixos/$relpath
 done
-
-# Symlink flake.lock
-echo "FLAKE.LOCK: $DIR/flake.lock"
-sudo ln $DIR/flake.lock /etc/nixos/flake.lock
 
 # Rebuild the system using the flake name passed as an argument and switch to it
 sudo nixos-rebuild switch --flake /etc/nixos#$1

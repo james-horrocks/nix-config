@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./home_manager/hyprland.nix
     ./home_manager/waybar.nix
   ];
 
@@ -54,12 +55,7 @@
     #   org.gradle.daemon.idletimeout=3600000
     # '';
 
-    ".config/hypr/hyprpaper.conf".text = ''
-      preload = ~/Pictures/backgrounds/wallhaven-r2opq1_3840x2400.png
-      wallpaper = ,~/Pictures/backgrounds/wallhaven-r2opq1_3840x2400.png
-      #ipc = off
-      splash = false
-    '';
+    ".dircolors".source = ./home_manager/dracula_dircolors;
   };
 
   # Home Manager can also manage your environment variables through
@@ -83,58 +79,6 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
-
-  wayland.windowManager.hyprland = {
-    enable = true;
-    settings = {
-      exec-once = "hyprpaper";
-      input.kb_layout = "gb";
-      "$mod" = "SUPER";
-      bind =
-        [
-          "$mod, F, exec, firefox"
-          ", Print, exec, grimblast copy area"
-          "$mod, Return, exec, alacritty"
-          "$mod, Q, killactive"
-          "ALT, Tab, cyclenext"
-          "ALT, Tab, bringactivetotop"
-        ]
-        ++ (
-          # workspaces
-          # binds $mod + [shift +] {1..10} to [move to] workspace {1..10}
-          builtins.concatLists (builtins.genList
-            (
-              x:
-              let
-                ws =
-                  let
-                    c = (x + 1) / 10;
-                  in
-                  builtins.toString (x + 1 - (c * 10));
-              in
-              [
-                "$mod, ${ws}, workspace, ${toString (x + 1)}"
-                "$mod SHIFT, ${ws}, movetoworkspace, ${toString (x + 1)}"
-              ]
-            )
-            10)
-        );
-      bindr = [
-        "$mod, SUPER_L, exec, rofi -show run"
-        "$mod, Tab, workspace, e+1"
-      ];
-      bindm = [
-        # mouse movements
-        "$mod, mouse:272, moveWindow"
-        "$mod, mouse:273, resizeWindow"
-        "$mod ALT, mouse:272, resizeWindow"
-      ];
-
-      animation = [
-        "global, 1, 1, default"
-      ];
-    };
-  };
 
   gtk = {
     enable = true;

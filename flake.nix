@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixos-hardware.url = "github:nixos/nixos-hardware/master";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -16,7 +17,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, hyprland, ... }@inputs:
+  outputs = { self, nixpkgs, nixos-hardware, home-manager, hyprland, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -26,6 +27,7 @@
         specialArgs = {inherit inputs;};
         modules = [
           ./configuration.nix
+          nixos-hardware.nixosModules.dell-xps-13-9300
           inputs.home-manager.nixosModules.default
         ];
       };

@@ -56,11 +56,18 @@
     LC_TIME = "en_GB.UTF-8";
   };
 
+  services = {
+    fwupd .enable = true;
+  };
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.displayManager.gdm = {
+    enable = true;
+    wayland = true;
+  };
   # services.xserver.desktopManager.gnome.enable = true;
 
   security.polkit.enable = true;
@@ -161,6 +168,7 @@
     vscode
     alacritty
     brave
+    blueman
     partclone
     deja-dup
     oh-my-zsh
@@ -169,16 +177,31 @@
       mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
     }))
     hyprpaper
-    kitty
+    hyprnome
+    hyprlock
+    hypridle
+    brightnessctl
     _1password
     _1password-gui
     polkit_gnome
+    nwg-displays
+    wlr-randr
+    gnome.nautilus
     dracula-theme
     dracula-icon-theme
     meslo-lgs-nf
     fastfetch
     most
     btop
+    pyenv
+    poetry
+    glibc
+    gcc
+    ncurses
+    readline
+    spotify-player
+    libsixel
+    protonvpn-gui
   ];
 
   services.gnome = {
@@ -220,6 +243,9 @@
 
   # Enable SSD trimming
   services.fstrim.enable = true;
+
+  # Enable requirement for Samba
+  services.gvfs.enable = true;
 
   # Auto upgrade
   # system.autoUpgrade.enable = true;
