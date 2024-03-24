@@ -23,21 +23,27 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
-      nixosConfigurations.default = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs;};
-        modules = [
-          ./configuration.nix
-          nixos-hardware.nixosModules.dell-xps-13-9300
-          inputs.home-manager.nixosModules.default
-        ];
+      nixosConfigurations = {
+        personal_laptop = nixpkgs.lib.nixosSystem {
+          specialArgs = {inherit inputs;};
+          modules = [
+            ./configuration.nix
+            nixos-hardware.nixosModules.dell-xps-13-9300
+            inputs.home-manager.nixosModules.default
+          ];
+        };
+        # TODO: Add config for work machine
       };
-      homeConfigurations.default = home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgs;
-        modules = [
-          hyprland.homeManagerModules.default
-          {wayland.windowManager.hyprland.enable = true;}
-          # ...
-        ];
+      homeConfigurations = {
+        personal_laptop = home-manager.lib.homeManagerConfiguration {
+          pkgs = pkgs;
+          modules = [
+            hyprland.homeManagerModules.default
+            {wayland.windowManager.hyprland.enable = true;}
+            # ...
+          ];
+        };
+        # TODO: Add config for work machine
       };
     };
 }
