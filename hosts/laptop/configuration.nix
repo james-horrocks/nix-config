@@ -166,6 +166,7 @@
     nixpkgs-fmt
     wget
     vscode
+    intel-vaapi-driver
     alacritty
     brave
     blueman

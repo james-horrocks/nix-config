@@ -27,6 +27,7 @@
           "$mod, Q, killactive"
           "ALT, Tab, cyclenext"
           "ALT, Tab, bringactivetotop"
+          "$mod, ESC, exec, hyprlock"
           "$mod, 0, workspace, 10"
           "$mod SHIFT, 0, movetoworkspace, 10"
         ]
@@ -68,7 +69,7 @@
     ".config/hypr/hyprlock.conf".source = ./hyprlock.conf;
     ".config/hypr/mocha.conf".source = ./mocha.conf;
     ".config/face.png".source = ./face.png;
-    
+
     ".local/share/icons/hyprcursor_Dracula".source = ./hyprcursor_Dracula;
   };
 }
