@@ -187,6 +187,7 @@
     nwg-displays
     wlr-randr
     gnome.nautilus
+    gnome.file-roller
     dracula-theme
     dracula-icon-theme
     meslo-lgs-nf

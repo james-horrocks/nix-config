@@ -4,6 +4,10 @@
   wayland.windowManager.hyprland = {
     enable = true;
     settings = {
+      env = [
+        "HYPRCURSOR_THEME,hyprcursor_Dracula"
+        "HYPRCURSOR_SIZE,24"
+      ];
       exec-once = [
         "hyprpaper"
         "hypridle"
@@ -64,5 +68,7 @@
     ".config/hypr/hyprlock.conf".source = ./hyprlock.conf;
     ".config/hypr/mocha.conf".source = ./mocha.conf;
     ".config/face.png".source = ./face.png;
+    
+    ".local/share/icons/hyprcursor_Dracula".source = ./hyprcursor_Dracula;
   };
 }
