@@ -1,15 +1,19 @@
-{ config, pkgs, ... }:
+{ inputs, config, pkgs, ... }:
 
 {
   imports = [
+    inputs.nix-colors.homeManagerModules.default
     ./home_manager/hyprland.nix
     ./home_manager/waybar.nix
+    # ./home_manager/rofi.nix
   ];
 
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "james";
   home.homeDirectory = "/home/james";
+
+  colorScheme = inputs.nix-colors.colorSchemes.dracula;
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -79,6 +83,11 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
+  # programs.nh = {
+  #   enable = true;
+  #   flake = "/home/james/nix-config";
+  # };
 
   gtk = {
     enable = true;

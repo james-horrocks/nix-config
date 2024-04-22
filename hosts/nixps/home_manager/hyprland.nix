@@ -1,8 +1,12 @@
-{ config, pkgs, ... }:
+{ inputs, config, pkgs, ... }:
 
 {
   wayland.windowManager.hyprland = {
-    enable = true;
+    systemd.enable = true;
+    plugins = [
+      inputs.hyprland-plugins.packages.${pkgs.system}.hyprbars
+      inputs.hyprland-plugins.packages.${pkgs.system}.hyprexpo
+    ];
     settings = {
       env = [
         "HYPRCURSOR_THEME,hyprcursor_Dracula"
@@ -58,6 +62,20 @@
       animation = [
         "global, 1, 3, default"
       ];
+
+      plugin = {
+        hyprbars = {
+          # example config
+          bar_height = 20;
+
+          # example buttons (R -> L)
+          # hyprbars-button = color, size, on-click
+          hyprbars-button = [
+            "rgb(ff4040), 10, 󰖭, hyprctl dispatch killactive"
+            "rgb(eeee11), 10, , hyprctl dispatch fullscreen 1"
+          ];
+        };
+      };
     };
   };
 

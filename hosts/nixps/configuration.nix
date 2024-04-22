@@ -14,7 +14,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "nixps"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -68,16 +68,16 @@
     enable = true;
     wayland = true;
   };
-  # services.xserver.desktopManager.gnome.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
 
   security.polkit.enable = true;
 
   xdg.portal.enable = true;
   # Not needed for GNOME
-  xdg.portal.extraPortals = [
-    pkgs.xdg-desktop-portal
-    pkgs.xdg-desktop-portal-gtk
-  ];
+  # xdg.portal.extraPortals = [
+  #   pkgs.xdg-desktop-portal
+  #   pkgs.xdg-desktop-portal-gtk
+  # ];
 
   # Configure keymap in X11
   services.xserver = {
@@ -88,17 +88,18 @@
   };
 
   # Enable Hyprland
-  programs.hyprland = {
-    enable = true;
-    xwayland.enable = true;
-    package = inputs.hyprland.packages."${pkgs.system}".hyprland;
-  };
+  # programs.hyprland = {
+  #   enable = true;
+  #   xwayland.enable = true;
+  #   package = inputs.hyprland.packages."${pkgs.system}".hyprland;
+  # };
 
   environment.sessionVariables = {
     # If the cursor becomes invisible
     WLR_NO_HARDWARE_CURSORS = "1";
     # Hint electron apps to use wayland
     NIXOS_OZONE_WL = "1";
+    FLAKE="/home/james/nix-config";
   };
 
   hardware.opengl.enable = true;
@@ -125,7 +126,32 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     # If you want to use JACK applications, uncomment this
-    jack.enable = true;
+    # jack.enable = true;
+
+    wireplumber = {
+      enable = true;
+      configPackages = [
+        (pkgs.writeTextDir "/etc/wireplumber/main.lua.d/50-alsa-config.lua" ''
+          alsa_monitor.rules = {
+            {
+              matches = {
+                {
+                  -- Matches all sources.
+                  { "node.name", "matches", "alsa_input.*" },
+                },
+                {
+                  -- Matches all sinks.
+                  { "node.name", "matches", "alsa_output.*" },
+                },
+              },
+              apply_properties = {
+                ["session.suspend-timeout-seconds"] = 0
+              },
+            },
+          }
+        '')
+      ];
+    };
 
     # use the example session manager (no others are packaged yet so this is enabled by default,
     # no need to redefine it in your config for now)
@@ -164,15 +190,20 @@
   environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     nixpkgs-fmt
+    bashInteractive
+    coreutils
+    gnumake
     wget
     vscode
     intel-vaapi-driver
     alacritty
     brave
-    blueman
+    # blueman
     partclone
     deja-dup
     oh-my-zsh
+    nh
+    manix
     waybar
     (waybar.overrideAttrs (oldAttrs: {
       mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
@@ -187,27 +218,24 @@
     polkit_gnome
     nwg-displays
     wlr-randr
-    gnome.nautilus
-    gnome.file-roller
+    # gnome.nautilus
+    # gnome.file-roller
     dracula-theme
     dracula-icon-theme
     meslo-lgs-nf
     fastfetch
     most
     btop
-    pyenv
-    poetry
-    glibc
-    gcc
-    ncurses
-    readline
     spotify-player
     libsixel
     protonvpn-gui
+    openrazer-daemon
+    polychromatic
   ];
 
   services.gnome = {
     gnome-keyring.enable = true;
+    core-utilities.enable = true;
   };
 
   security = {
