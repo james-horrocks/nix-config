@@ -1,19 +1,12 @@
 { inputs, config, pkgs, ... }:
 
 {
-  imports = [
-    inputs.nix-colors.homeManagerModules.default
-    ./home_manager/hyprland.nix
-    ./home_manager/waybar.nix
-    # ./home_manager/rofi.nix
-  ];
-
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "james";
   home.homeDirectory = "/home/james";
 
-  colorScheme = inputs.nix-colors.colorSchemes.dracula;
+  # colorScheme = inputs.nix-colors.colorSchemes.dracula;
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -24,9 +17,10 @@
   # release notes.
   home.stateVersion = "23.11"; # Please read the comment before changing.
 
+  nixpkgs.config.allowUnfree = true;
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = [
+  home.packages = with pkgs; [
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
@@ -43,6 +37,10 @@
     # (pkgs.writeShellScriptBin "my-hello" ''
     #   echo "Hello, ${config.home.username}!"
     # '')
+
+    meslo-lgs-nf
+    zsh-powerlevel10k
+    zsh-fast-syntax-highlighting
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -104,7 +102,7 @@
 
   qt = {
     enable = true;
-    platformTheme = "gtk";
+    platformTheme.name = "gtk";
   };
 
   programs.rofi = {
@@ -146,4 +144,12 @@
       commit.gpgsign = true;
     };
   };
+
+  imports = [
+    # inputs.nix-colors.homeManagerModules.default
+    # ./home_manager/hyprland.nix
+    # ./home_manager/waybar.nix
+    # ./home_manager/rofi.nix
+    ./home_manager/zsh.nix
+  ];
 }

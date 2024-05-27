@@ -6,7 +6,8 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
 
@@ -27,8 +28,8 @@
   nix = {
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
-      substituters = ["https://hyprland.cachix.org"];
-      trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
+      substituters = [ "https://hyprland.cachix.org" ];
+      trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
       auto-optimise-store = true;
     };
     gc = {
@@ -99,13 +100,15 @@
     WLR_NO_HARDWARE_CURSORS = "1";
     # Hint electron apps to use wayland
     NIXOS_OZONE_WL = "1";
-    FLAKE="/home/james/nix-config";
+    FLAKE = "/home/james/nix-config";
   };
 
   hardware.opengl.enable = true;
+  hardware.system76.enableAll = true;
 
   # Enable zsh
   programs.zsh.enable = true;
+  users.defaultUserShell = pkgs.zsh;
 
   # Configure console keymap
   console.keyMap = "uk";
@@ -162,75 +165,78 @@
   # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
+  environment.shells = with pkgs; [ zsh ];
   users.users.james = {
     isNormalUser = true;
     description = "James Horrocks";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
       firefox
-    #  thunderbird
+      #  thunderbird
     ];
     shell = pkgs.zsh;
   };
 
-  home-manager = {
-    # also pass inputs to home-manager modules
-    extraSpecialArgs = {inherit inputs;};
-    users = {
-      "james" = import ./home.nix;
-    };
-    backupFileExtension = "bak";
-  };
+  programs.command-not-found.enable = false;
+  # for home-manager, use programs.bash.initExtra instead
+  programs.zsh.interactiveShellInit = ''
+    source ${pkgs.nix-index}/etc/profile.d/command-not-found.sh
+  '';
+  environment.pathsToLink = [ "/share/zsh" ];
+
+  # home-manager = {
+  #   # also pass inputs to home-manager modules
+  #   extraSpecialArgs = {inherit inputs;};
+  #   # users = {
+  #   #   "james" = import ./home.nix;
+  #   # };
+  #   backupFileExtension = "bak";
+  # };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  programs.nix-ld.libraries = with pkgs; [
+    libgcc
+  ];
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    # Nix
     nixpkgs-fmt
-    bashInteractive
-    coreutils
-    gnumake
-    wget
-    vscode
-    intel-vaapi-driver
-    alacritty
-    brave
-    # blueman
-    partclone
-    deja-dup
-    oh-my-zsh
     nh
     manix
-    waybar
-    (waybar.overrideAttrs (oldAttrs: {
-      mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
-    }))
-    hyprpaper
-    hyprnome
-    hyprlock
-    hypridle
-    brightnessctl
+
+    #Gnome
+    gnomeExtensions.pop-shell
+
+    intel-media-driver
+    intel-vaapi-driver
+
+    coreutils
+    file
+    fzf
+    gnumake
+    wget
     _1password
     _1password-gui
     polkit_gnome
-    nwg-displays
-    wlr-randr
-    # gnome.nautilus
-    # gnome.file-roller
     dracula-theme
     dracula-icon-theme
-    meslo-lgs-nf
     fastfetch
     most
     btop
-    spotify-player
     libsixel
+    nvtopPackages.intel
+
+    spotify-player
     protonvpn-gui
-    openrazer-daemon
-    polychromatic
+    vscode
+    alacritty
+    planify
+
+    ollama
   ];
 
   services.gnome = {
