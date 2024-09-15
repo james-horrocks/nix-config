@@ -151,5 +151,6 @@
     # ./home_manager/waybar.nix
     # ./home_manager/rofi.nix
     ./home_manager/zsh.nix
+    ./home_manager/alacritty.nix
   ];
 }
