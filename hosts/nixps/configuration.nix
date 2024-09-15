@@ -103,7 +103,7 @@
     FLAKE = "/home/james/nix-config";
   };
 
-  hardware.opengl.enable = true;
+  hardware.graphics.enable = true;
   hardware.system76.enableAll = true;
 
   # Enable zsh
@@ -120,7 +120,7 @@
   hardware.bluetooth.enable = true;
 
   # Enable sound with pipewire.
-  sound.enable = true;
+  # sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -235,6 +235,7 @@
     vscode
     alacritty
     planify
+    obsidian
 
     ollama
   ];
