@@ -15,7 +15,7 @@
   # You should not change this value, even if you update Home Manager. If you do
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
-  home.stateVersion = "23.11"; # Please read the comment before changing.
+  home.stateVersion = "25.05"; # Please read the comment before changing.
 
   nixpkgs.config.allowUnfree = true;
   # The home.packages option allows you to install Nix packages into your
@@ -87,18 +87,18 @@
   #   flake = "/home/james/nix-config";
   # };
 
-  gtk = {
-    enable = true;
-    theme = {
-      package = pkgs.dracula-theme;
-      name = "Dracula";
-    };
+  # gtk = {
+  #   enable = true;
+  #   theme = {
+  #     package = pkgs.dracula-theme;
+  #     name = "Dracula";
+  #   };
 
-    iconTheme = {
-      package = pkgs.dracula-icon-theme;
-      name = "Dracula";
-    };
-  };
+  #   iconTheme = {
+  #     package = pkgs.dracula-icon-theme;
+  #     name = "Dracula";
+  #   };
+  # };
 
   qt = {
     enable = true;
@@ -128,10 +128,12 @@
   programs.git = {
     enable = true;
     userName = "James Horrocks";
-    userEmail = "james.horrocks@live.co.uk";
+    userEmail = "jphorrocks@proton.me";
     signing = {
+      format = "ssh";
       key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIACCeXcAMW7DTQ5M9j95T0Yi6OgKOYHbJZ/O8f7Lx9xJ";
       signByDefault = true;
+      signer = "/run/current-system/sw/bin/op-ssh-sign";
     };
     ignores = [
       ".vscode/"
@@ -141,16 +143,25 @@
       init.defaultBranch = "main";
       gpg.format = "ssh";
       gpg.ssh.program = "/run/current-system/sw/bin/op-ssh-sign";
-      commit.gpgsign = true;
     };
   };
+
+  # programs._1password-shell-plugins = {
+  #   # enable 1Password shell plugins for bash, zsh, and fish shell
+  #   enable = true;
+  #   # the specified packages as well as 1Password CLI will be
+  #   # automatically installed and configured to use shell plugins
+  #   plugins = with pkgs; [ gh awscli2 ];
+  # };
 
   imports = [
     # inputs.nix-colors.homeManagerModules.default
     # ./home_manager/hyprland.nix
     # ./home_manager/waybar.nix
     # ./home_manager/rofi.nix
+    # inputs._1password-shell-plugins.hmModules.default
     ./home_manager/zsh.nix
     ./home_manager/alacritty.nix
+    ./home_manager/ghostty.nix
   ];
 }

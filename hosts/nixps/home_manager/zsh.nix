@@ -18,7 +18,7 @@
     initExtra = ''
     eval `dircolors ~/.dircolors`
     [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-    fpath+=${ZDOTDIR:-~}/.zsh_functions
+    fpath+=~/.zsh_functions
     if [[ -n $SSH_CONNECTION ]]; then
       export EDITOR='nano'
     else

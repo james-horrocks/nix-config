@@ -14,6 +14,13 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernelPackages = pkgs.linuxPackages_zen;
+
+  powerManagement.enable = true;
+  powerManagement.cpuFreqGovernor = "ondemand"; # will be managed by tlp
+  powerManagement.powerUpCommands = ''
+    echo XHC > /proc/acpi/wakeup
+  '';
 
   networking.hostName = "nixps"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -28,8 +35,10 @@
   nix = {
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
-      substituters = [ "https://hyprland.cachix.org" ];
-      trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
+      # substituters = [ "https://hyprland.cachix.org" ];
+      # trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
+      substituters = [ "https://cosmic.cachix.org/" ];
+      trusted-public-keys = [ "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE=" ];
       auto-optimise-store = true;
     };
     gc = {
@@ -58,18 +67,22 @@
   };
 
   services = {
-    fwupd .enable = true;
+    fwupd.enable = true;
   };
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
+  # # Enable the X11 windowing system.
+  # services.xserver.enable = true;
 
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm = {
-    enable = true;
-    wayland = true;
-  };
-  services.xserver.desktopManager.gnome.enable = true;
+  # # Enable the GNOME Desktop Environment.
+  # services.xserver.displayManager.gdm = {
+  #   enable = true;
+  #   wayland = true;
+  # };
+  # services.xserver.desktopManager.gnome.enable = true;
+
+  # Enable the Cosmic Desktop Environment.
+  services.desktopManager.cosmic.enable = true;
+  services.displayManager.cosmic-greeter.enable = true;
 
   security.polkit.enable = true;
 
@@ -121,7 +134,7 @@
 
   # Enable sound with pipewire.
   # sound.enable = true;
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -208,9 +221,6 @@
     nh
     manix
 
-    #Gnome
-    gnomeExtensions.pop-shell
-
     intel-media-driver
     intel-vaapi-driver
 
@@ -219,7 +229,7 @@
     fzf
     gnumake
     wget
-    _1password
+    _1password-cli
     _1password-gui
     polkit_gnome
     dracula-theme
@@ -227,7 +237,6 @@
     fastfetch
     most
     btop
-    libsixel
     nvtopPackages.intel
 
     spotify-player
@@ -236,8 +245,10 @@
     alacritty
     planify
     obsidian
+    inputs.ghostty.packages.x86_64-linux.default
 
     ollama
+    uv
   ];
 
   services.gnome = {
@@ -276,6 +287,13 @@
         TimeoutStopSec = 10;
       };
     };
+
+    sleep.extraConfig = ''
+      AllowSuspend=yes
+      AllowHibernation=yes
+      AllowHybridSleep=yes
+      AllowSuspendThenHibernate=yes
+    '';
   };
 
   # Enable SSD trimming

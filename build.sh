@@ -24,4 +24,9 @@ find $DIR -not -name "build.sh" -not -path "*/\.*" | while read file; do
 done
 
 # Rebuild the system using the flake name passed as an argument and switch to it
-nh os switch -H $1 || sudo nixos-rebuild switch --flake /etc/nixos#$1
+nh --version
+if [ $? -eq 0 ]; then
+    nh os switch -H $1
+else
+    sudo nixos-rebuild switch --flake /etc/nixos#$1
+fi
