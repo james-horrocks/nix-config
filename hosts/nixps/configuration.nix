@@ -34,11 +34,21 @@
 
   nix = {
     settings = {
+      trusted-users = [ "root" "james" ];
       experimental-features = [ "nix-command" "flakes" ];
       # substituters = [ "https://hyprland.cachix.org" ];
       # trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
-      substituters = [ "https://cosmic.cachix.org/" ];
-      trusted-public-keys = [ "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE=" ];
+      substituters = [
+        "https://cache.nixos.org/"
+        "https://james-horrocks.cachix.org"
+        "https://cosmic.cachix.org/"
+        "https://ghostty.cachix.org/"
+      ];
+      trusted-public-keys = [
+        "james-horrocks.cachix.org-1:qbXPzt92hcjFmcSZE7sDr+ZMFcEyAYu1PYOjCkuiGVA="
+        "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE="
+        "ghostty.cachix.org-1:QB389yTa6gTyneehvqG58y0WnHjQOqgnA+wBnpWWxns="
+      ];
       auto-optimise-store = true;
     };
     gc = {
@@ -134,45 +144,45 @@
 
   # Enable sound with pipewire.
   # sound.enable = true;
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    # jack.enable = true;
+  # services.pulseaudio.enable = false;
+  # security.rtkit.enable = true;
+  # services.pipewire = {
+  #   enable = true;
+  #   alsa.enable = true;
+  #   alsa.support32Bit = true;
+  #   pulse.enable = true;
+  #   # If you want to use JACK applications, uncomment this
+  #   # jack.enable = true;
 
-    wireplumber = {
-      enable = true;
-      configPackages = [
-        (pkgs.writeTextDir "/etc/wireplumber/main.lua.d/50-alsa-config.lua" ''
-          alsa_monitor.rules = {
-            {
-              matches = {
-                {
-                  -- Matches all sources.
-                  { "node.name", "matches", "alsa_input.*" },
-                },
-                {
-                  -- Matches all sinks.
-                  { "node.name", "matches", "alsa_output.*" },
-                },
-              },
-              apply_properties = {
-                ["session.suspend-timeout-seconds"] = 0
-              },
-            },
-          }
-        '')
-      ];
-    };
+  #   wireplumber = {
+  #     enable = true;
+  #     configPackages = [
+  #       (pkgs.writeTextDir "/etc/wireplumber/main.lua.d/50-alsa-config.lua" ''
+  #         alsa_monitor.rules = {
+  #           {
+  #             matches = {
+  #               {
+  #                 -- Matches all sources.
+  #                 { "node.name", "matches", "alsa_input.*" },
+  #               },
+  #               {
+  #                 -- Matches all sinks.
+  #                 { "node.name", "matches", "alsa_output.*" },
+  #               },
+  #             },
+  #             apply_properties = {
+  #               ["session.suspend-timeout-seconds"] = 0
+  #             },
+  #           },
+  #         }
+  #       '')
+  #     ];
+  #   };
 
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
-  };
+  #   # use the example session manager (no others are packaged yet so this is enabled by default,
+  #   # no need to redefine it in your config for now)
+  #   #media-session.enable = true;
+  # };
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
@@ -220,6 +230,7 @@
     nixpkgs-fmt
     nh
     manix
+    cachix
 
     intel-media-driver
     intel-vaapi-driver
@@ -242,10 +253,12 @@
     spotify-player
     protonvpn-gui
     vscode
+    jetbrains.pycharm-professional
     alacritty
     planify
     obsidian
     inputs.ghostty.packages.x86_64-linux.default
+    beeper
 
     ollama
     uv

@@ -1,32 +1,24 @@
 # Bash script to symlink all nix files in all subdirectories to /etc/nixos
 
-sudo rm -r /etc/nixos/*
-
 # Get the current directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Find all nix files in the current directory and all subdirectories
 echo "DIR: $DIR"
-find $DIR -not -name "build.sh" -not -path "*/\.*" | while read file; do
-    # Get the relative path of the file
-    echo "FILE: $file"
-    relpath=$(realpath --relative-to=$DIR $file)
-    # Check if file is in a subdirectory
-    if [[ $relpath == *"/"* ]]; then
-        # Create the subdirectory in /etc/nixos if it doesn't exist
-        subdir=$(dirname $relpath)
-        echo "$file is in a subdirectory, creating subdirectory at /etc/nixos/$subdir"
-        sudo mkdir -p /etc/nixos/$subdir
-    fi
-    echo "RELPATH: $relpath"
-    # Create the symlink
-    sudo ln $file /etc/nixos/$relpath
-done
+if [ -L /etc/nixos ] && [ "$(readlink -f /etc/nixos)" = "$(realpath $DIR)" ]; then
+    echo "/etc/nixos is already symlinked to $DIR"
+else
+    echo "Symlinking /etc/nixos to $DIR"
+    sudo rm -rf /etc/nixos
+    sudo ln -s "$(realpath $DIR)" /etc/nixos
+fi
+
+sudo cachix authtoken $(op read op://personal/cachix/personal\ auth\ token)
 
 # Rebuild the system using the flake name passed as an argument and switch to it
 nh --version
 if [ $? -eq 0 ]; then
-    nh os switch -H $1
+    cachix watch-exec --watch-mode post-build-hook james-horrocks -- nh os switch -H $1
 else
-    sudo nixos-rebuild switch --flake /etc/nixos#$1
+    cachix watch-exec --watch-mode post-build-hook james-horrocks -- nixos-rebuild switch --flake /etc/nixos#$1
 fi
