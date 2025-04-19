@@ -64,6 +64,7 @@
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
       python = nixpkgs-python.packages.${system};
+      username = "james";
     in
     {
       nixosConfigurations = {
@@ -81,11 +82,12 @@
             { programs.nix-ld.dev.enable = true; }
             inputs.home-manager.nixosModules.default
           ];
+          extraSpecialArgs = { username = username; };
         };
-        # TODO: Add config for work machine
       };
       homeConfigurations = {
-        "james@nixps" = home-manager.lib.homeManagerConfiguration {
+        nixps = home-manager.lib.homeManagerConfiguration {
+          specialArgs = { inherit inputs; };
           pkgs = pkgs;
           modules = [
             ./hosts/nixps/home.nix
@@ -93,8 +95,15 @@
             # hyprland.homeManagerModules.default
             # {wayland.windowManager.hyprland.enable = true;}
           ];
+          extraSpecialArgs = { username = username; };
         };
-        # TODO: Add config for work machine
+        wsl = home-manager.lib.homeManagerConfiguration {
+          pkgs = pkgs;
+          modules = [
+            ./hosts/wsl/home.nix
+          ];
+          extraSpecialArgs = { username = username; };
+        };
       };
     };
 }

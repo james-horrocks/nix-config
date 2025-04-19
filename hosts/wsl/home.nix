@@ -3,10 +3,9 @@
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
+  targets.genericLinux.enable = true;
   home.username = username;
   home.homeDirectory = "/home/${username}";
-
-  # colorScheme = inputs.nix-colors.colorSchemes.dracula;
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -44,37 +43,23 @@
     cachix
     most
 
-    alacritty
-    inputs.ghostty.packages.x86_64-linux.default
     meslo-lgs-nf
     zsh-powerlevel10k
     zsh-fast-syntax-highlighting
 
-    coreutils
-    file
-    fzf
-    gnumake
     wget
     _1password-cli
-    _1password-gui
-    polkit_gnome
-    dracula-theme
-    dracula-icon-theme
     fastfetch
-    btop
-    nvtopPackages.intel
 
-    firefox
-    spotify-player
-    protonvpn-gui
-    planify
-    obsidian
-    beeper
-
-    vscode
-    jetbrains.pycharm-professional
-    ollama
     uv
+    go
+    jdk11
+    cargo
+    tfswitch
+
+    azure-cli
+    awscli2
+    google-cloud-sdk
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -116,58 +101,22 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  # programs.nh = {
+  # programs.ssh = {
   #   enable = true;
-  #   flake = "/home/james/nix-config";
+  #   extraConfig = ''
+  #     IdentityAgent ~/.1password/agent.sock
+  #   '';
   # };
-
-  # gtk = {
-  #   enable = true;
-  #   theme = {
-  #     package = pkgs.dracula-theme;
-  #     name = "Dracula";
-  #   };
-
-  #   iconTheme = {
-  #     package = pkgs.dracula-icon-theme;
-  #     name = "Dracula";
-  #   };
-  # };
-
-  qt = {
-    enable = true;
-    platformTheme.name = "gtk";
-  };
-
-  programs.rofi = {
-    enable = true;
-    location = "center";
-  };
-
-  services.dunst = {
-    enable = true;
-    iconTheme = {
-      package = pkgs.dracula-icon-theme;
-      name = "Dracula";
-    };
-  };
-
-  programs.ssh = {
-    enable = true;
-    extraConfig = ''
-      IdentityAgent ~/.1password/agent.sock
-    '';
-  };
 
   programs.git = {
     enable = true;
     userName = "James Horrocks";
-    userEmail = "jphorrocks@proton.me";
+    userEmail = "james.horrocks@ensono.com";
     signing = {
       format = "ssh";
       key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIACCeXcAMW7DTQ5M9j95T0Yi6OgKOYHbJZ/O8f7Lx9xJ";
       signByDefault = true;
-      signer = "/run/current-system/sw/bin/op-ssh-sign";
+      signer = "/mnt/c/Windows/System32/OpenSSH//ssh.exe";
     };
     ignores = [
       ".vscode/"
@@ -176,7 +125,7 @@
     extraConfig = {
       init.defaultBranch = "main";
       gpg.format = "ssh";
-      gpg.ssh.program = "/run/current-system/sw/bin/op-ssh-sign";
+      gpg.ssh.program = "/mnt/c/Windows/System32/OpenSSH//ssh.exe";
     };
   };
 
@@ -189,13 +138,7 @@
   # };
 
   imports = [
-    # inputs.nix-colors.homeManagerModules.default
-    # ./home_manager/hyprland.nix
-    # ./home_manager/waybar.nix
-    # ./home_manager/rofi.nix
     # inputs._1password-shell-plugins.hmModules.default
     ./home_manager/zsh.nix
-    ./home_manager/alacritty.nix
-    ./home_manager/ghostty.nix
   ];
 }

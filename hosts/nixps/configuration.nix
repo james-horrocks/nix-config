@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, inputs, username, ... }:
 
 {
   imports =
@@ -34,7 +34,7 @@
 
   nix = {
     settings = {
-      trusted-users = [ "root" "james" ];
+      trusted-users = [ "root" username ];
       experimental-features = [ "nix-command" "flakes" ];
       # substituters = [ "https://hyprland.cachix.org" ];
       # trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
@@ -123,7 +123,7 @@
     WLR_NO_HARDWARE_CURSORS = "1";
     # Hint electron apps to use wayland
     NIXOS_OZONE_WL = "1";
-    FLAKE = "/home/james/nix-config";
+    FLAKE = "/home/${username}/nix-config";
   };
 
   hardware.graphics.enable = true;
@@ -189,14 +189,10 @@
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   environment.shells = with pkgs; [ zsh ];
-  users.users.james = {
+  users.users.${username} = {
     isNormalUser = true;
     description = "James Horrocks";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-      firefox
-      #  thunderbird
-    ];
     shell = pkgs.zsh;
   };
 
@@ -211,7 +207,7 @@
   #   # also pass inputs to home-manager modules
   #   extraSpecialArgs = {inherit inputs;};
   #   # users = {
-  #   #   "james" = import ./home.nix;
+  #   #   username = import ./home.nix;
   #   # };
   #   backupFileExtension = "bak";
   # };
@@ -227,41 +223,8 @@
   environment.systemPackages = with pkgs; [
     #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     # Nix
-    nixpkgs-fmt
-    nh
-    manix
-    cachix
-
     intel-media-driver
     intel-vaapi-driver
-
-    coreutils
-    file
-    fzf
-    gnumake
-    wget
-    _1password-cli
-    _1password-gui
-    polkit_gnome
-    dracula-theme
-    dracula-icon-theme
-    fastfetch
-    most
-    btop
-    nvtopPackages.intel
-
-    spotify-player
-    protonvpn-gui
-    vscode
-    jetbrains.pycharm-professional
-    alacritty
-    planify
-    obsidian
-    inputs.ghostty.packages.x86_64-linux.default
-    beeper
-
-    ollama
-    uv
   ];
 
   services.gnome = {
@@ -283,7 +246,7 @@
     enable = true;
     # Certain features, including CLI integration and system authentication support,
     # require enabling PolKit integration on some desktop environments (e.g. Plasma).
-    polkitPolicyOwners = [ "james" ];
+    polkitPolicyOwners = [ username ];
   };
 
   systemd = {
