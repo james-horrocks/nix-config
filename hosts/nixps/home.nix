@@ -39,12 +39,8 @@
     # '')
 
     nixpkgs-fmt
-    nh
-    manix
-    cachix
-    most
 
-    alacritty
+    # alacritty
     inputs.ghostty.packages.x86_64-linux.default
     meslo-lgs-nf
     zsh-powerlevel10k
@@ -135,7 +131,7 @@
   # };
 
   qt = {
-    enable = true;
+    enable = false;
     platformTheme.name = "gtk";
   };
 

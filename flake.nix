@@ -7,7 +7,7 @@
     nixos-cosmic.url = "github:lilyinstarlight/nixos-cosmic";
 
     lix-module = {
-      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.92.0-1.tar.gz";
+      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.92.0-3.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
@@ -68,8 +68,11 @@
     in
     {
       nixosConfigurations = {
-        nixps = nixpkgs.lib.nixosSystem {
-          specialArgs = {inherit inputs;};
+        "${username}@nixps" = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs;
+            username = username;
+          };
           modules = [
             lix-module.nixosModules.default
             nixos-cosmic.nixosModules.default
@@ -82,12 +85,10 @@
             { programs.nix-ld.dev.enable = true; }
             inputs.home-manager.nixosModules.default
           ];
-          extraSpecialArgs = { username = username; };
         };
       };
       homeConfigurations = {
-        nixps = home-manager.lib.homeManagerConfiguration {
-          specialArgs = { inherit inputs; };
+        "${username}@nixps" = home-manager.lib.homeManagerConfiguration {
           pkgs = pkgs;
           modules = [
             ./hosts/nixps/home.nix
@@ -95,7 +96,10 @@
             # hyprland.homeManagerModules.default
             # {wayland.windowManager.hyprland.enable = true;}
           ];
-          extraSpecialArgs = { username = username; };
+          extraSpecialArgs = {
+            inherit inputs;
+            username = username;
+          };
         };
         wsl = home-manager.lib.homeManagerConfiguration {
           pkgs = pkgs;

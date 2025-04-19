@@ -20,5 +20,5 @@ nh --version
 if [ $? -eq 0 ]; then
     cachix watch-exec --watch-mode post-build-hook james-horrocks -- nh os switch -H $1
 else
-    cachix watch-exec --watch-mode post-build-hook james-horrocks -- nixos-rebuild switch --flake /etc/nixos#$1
+    cachix watch-exec --watch-mode post-build-hook james-horrocks -- sudo nixos-rebuild switch --flake .#$1
 fi

@@ -225,6 +225,12 @@
     # Nix
     intel-media-driver
     intel-vaapi-driver
+
+    git
+    nh
+    manix
+    cachix
+    most
   ];
 
   services.gnome = {
