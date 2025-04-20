@@ -112,10 +112,15 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  # programs.nh = {
-  #   enable = true;
-  #   flake = "/home/james/nix-config";
-  # };
+  programs.nh = {
+    enable = true;
+    flake = "/home/james/nix-config";
+    clean = {
+      enable = true;
+      dates = "weekly";
+      extraArgs = "--keep 3 --keep-since 3d";
+    };
+  };
 
   # gtk = {
   #   enable = true;
@@ -133,19 +138,6 @@
   qt = {
     enable = false;
     platformTheme.name = "gtk";
-  };
-
-  programs.rofi = {
-    enable = true;
-    location = "center";
-  };
-
-  services.dunst = {
-    enable = true;
-    iconTheme = {
-      package = pkgs.dracula-icon-theme;
-      name = "Dracula";
-    };
   };
 
   programs.ssh = {
@@ -176,22 +168,17 @@
     };
   };
 
-  # programs._1password-shell-plugins = {
-  #   # enable 1Password shell plugins for bash, zsh, and fish shell
-  #   enable = true;
-  #   # the specified packages as well as 1Password CLI will be
-  #   # automatically installed and configured to use shell plugins
-  #   plugins = with pkgs; [ gh awscli2 ];
-  # };
+  programs._1password-shell-plugins = {
+    # enable 1Password shell plugins for bash, zsh, and fish shell
+    enable = true;
+    # the specified packages as well as 1Password CLI will be
+    # automatically installed and configured to use shell plugins
+    plugins = with pkgs; [ gh awscli2 ];
+  };
 
   imports = [
-    # inputs.nix-colors.homeManagerModules.default
-    # ./home_manager/hyprland.nix
-    # ./home_manager/waybar.nix
-    # ./home_manager/rofi.nix
-    # inputs._1password-shell-plugins.hmModules.default
+    inputs._1password-shell-plugins.hmModules.default
     ./home_manager/zsh.nix
-    ./home_manager/alacritty.nix
     ./home_manager/ghostty.nix
   ];
 }
