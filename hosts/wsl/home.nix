@@ -47,6 +47,7 @@
     zsh-powerlevel10k
     zsh-fast-syntax-highlighting
 
+    coreutils
     wget
     _1password-cli
     fastfetch

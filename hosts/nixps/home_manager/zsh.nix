@@ -5,9 +5,7 @@
     enable = true;
     enableCompletion = true;
     autosuggestion.enable = true;
-    # syntaxHighlighting = {
-    #   enable = true;
-    # };
+    syntaxHighlighting.enable = true;
 
     initExtraFirst = ''
     if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
@@ -58,10 +56,6 @@
         name = "powerlevel10k";
         src = pkgs.zsh-powerlevel10k;
         file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
-      }
-      {
-        name = "fast-syntax-highlighting";
-        src = pkgs.zsh-fast-syntax-highlighting;
       }
     ];
 
