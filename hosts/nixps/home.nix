@@ -68,7 +68,6 @@
     beeper
 
     vscode
-    jetbrains.pycharm-professional
     ollama
     uv
   ];

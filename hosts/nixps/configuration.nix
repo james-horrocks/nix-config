@@ -189,7 +189,7 @@
   users.users.${username} = {
     isNormalUser = true;
     description = "James Horrocks";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     shell = pkgs.zsh;
   };
 
@@ -229,6 +229,14 @@
     cachix
     most
   ];
+
+  virtualisation.docker = {
+    enable = true;
+    rootless = {
+      enable = true;
+      setSocketVariable = true;
+    };
+  };
 
   services.gnome = {
     gnome-keyring.enable = true;
