@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   programs.zsh = {
@@ -7,22 +7,29 @@
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
 
-    initExtraFirst = ''
-    if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
-      source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
-    fi
-    '';
+    initContent = 
+      let 
+        initExtraFirstContent = lib.mkOrder 500 ''
+          if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
+            source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
+          fi
+        '';
 
-    initExtra = ''
-    eval `dircolors ~/.dircolors`
-    [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-    fpath+=~/.zsh_functions
-    if [[ -n $SSH_CONNECTION ]]; then
-      export EDITOR='nano'
-    else
-      export EDITOR='code'
-    fi
-    '';
+        initExtraContent = lib.mkOrder 1000''
+          eval `dircolors ~/.dircolors`
+          [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+          fpath+=~/.zsh_functions
+          if [[ -n $SSH_CONNECTION ]]; then
+            export EDITOR='nano'
+          else
+            export EDITOR='code'
+          fi
+        '';
+
+      in lib.mkMerge [
+        initExtraFirstContent
+        initExtraContent
+      ];
 
     localVariables = {
       POWERLEVEL9K_MODE = "nerdfont-complete";
@@ -35,25 +42,25 @@
     };
 
     profileExtra = ''
-    if [ -d "$HOME/bin" ] ; then
-        PATH="$HOME/bin:$PATH"
-    fi
+      if [ -d "$HOME/bin" ] ; then
+          PATH="$HOME/bin:$PATH"
+      fi
 
-    if [ -d "$HOME/.local/bin" ] ; then
-        PATH="$HOME/.local/bin:$PATH"
-    fi
+      if [ -d "$HOME/.local/bin" ] ; then
+          PATH="$HOME/.local/bin:$PATH"
+      fi
 
-    if [ -d "${pkgs.vscode}/bin" ] ; then
-        PATH="${pkgs.vscode}/bin:$PATH"
-    fi
+      if [ -d "${pkgs.vscode}/bin" ] ; then
+          PATH="${pkgs.vscode}/bin:$PATH"
+      fi
 
-    if [ -d "$HOME/go/bin" ] ; then
-        PATH="$HOME/go/bin:$PATH"
-    fi
+      if [ -d "$HOME/go/bin" ] ; then
+          PATH="$HOME/go/bin:$PATH"
+      fi
 
-    if [ -d "$HOME/.nix-profile/bin" ] ; then
-        PATH="$HOME/.nix-profile/bin:$PATH"
-    fi
+      if [ -d "$HOME/.nix-profile/bin" ] ; then
+          PATH="$HOME/.nix-profile/bin:$PATH"
+      fi
     '';
 
     shellAliases = {

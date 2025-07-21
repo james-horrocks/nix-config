@@ -112,12 +112,12 @@
   programs.git = {
     enable = true;
     userName = "James Horrocks";
-    userEmail = "james.horrocks@ensono.com";
+    userEmail = "jphorrocks@proton.me";
     signing = {
       format = "ssh";
       key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIACCeXcAMW7DTQ5M9j95T0Yi6OgKOYHbJZ/O8f7Lx9xJ";
       signByDefault = true;
-      signer = "/mnt/c/Windows/System32/OpenSSH//ssh.exe";
+      signer = "ssh.exe";
     };
     ignores = [
       ".vscode/"
@@ -126,7 +126,8 @@
     extraConfig = {
       init.defaultBranch = "main";
       gpg.format = "ssh";
-      gpg.ssh.program = "/mnt/c/Windows/System32/OpenSSH//ssh.exe";
+      gpg.ssh.program = "/mnt/c/Users/James/AppData/Local/1Password/app/8/op-ssh-sign-wsl";
+      core.sshCommand = "ssh.exe";
     };
   };
 
