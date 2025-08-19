@@ -62,7 +62,9 @@
     ... }@inputs:
     let
       system = "x86_64-linux";
+      darwinSystem = "aarch64-darwin"; # assume Apple Silicon; change to x86_64-darwin if needed
       pkgs = nixpkgs.legacyPackages.${system};
+      darwinPkgs = nixpkgs.legacyPackages.${darwinSystem};
       python = nixpkgs-python.packages.${system};
       username = "james";
     in
@@ -87,6 +89,20 @@
           ];
         };
       };
+      # darwin (macOS) configurations
+      darwinConfigurations = {
+        macbook = nixpkgs.lib.darwinSystem {
+          system = darwinSystem;
+          modules = [
+            ./hosts/macos/configuration.nix
+            inputs.home-manager.darwinModules.default
+          ];
+          specialArgs = {
+            inherit inputs;
+            username = username;
+          };
+        };
+      };
       homeConfigurations = {
         "${username}@nixps" = home-manager.lib.homeManagerConfiguration {
           pkgs = pkgs;
@@ -105,6 +121,14 @@
           pkgs = pkgs;
           modules = [
             ./hosts/wsl/home.nix
+          ];
+          extraSpecialArgs = { username = username; };
+        };
+        # macbook: Home Manager configuration for macOS (assumes aarch64-darwin)
+        macbook = home-manager.lib.homeManagerConfiguration {
+          pkgs = darwinPkgs;
+          modules = [
+            ./hosts/macos/home.nix
           ];
           extraSpecialArgs = { username = username; };
         };
